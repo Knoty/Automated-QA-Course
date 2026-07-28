@@ -11,7 +11,7 @@ namespace Lesson2026_Ui_Markelov.Base
         protected BasePage(IWebDriver driver)
         {
             _driver = driver;
-            _wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+            _wait = new WebDriverWait(driver, TimeSpan.FromSeconds(15));
         }
 
         protected By LoginInput => By.XPath("//label[.='Логин']/following::input");

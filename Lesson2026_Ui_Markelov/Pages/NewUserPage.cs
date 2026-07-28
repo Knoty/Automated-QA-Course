@@ -5,7 +5,7 @@ using OpenQA.Selenium.Support.UI;
 
 namespace Lesson2026_Ui_Markelov.Pages
 {
-    public class CreateUserPage : BasePage
+    public class NewUserPage : BasePage
     {
         private readonly By _nameInput = By.XPath("//label[.=\"Имя\"]/following::input");
         private readonly By _emailInput = By.XPath("//label[.=\"Email\"]/following::input");
@@ -16,7 +16,7 @@ namespace Lesson2026_Ui_Markelov.Pages
         private readonly By _createUserSuccessMessagePath = By.XPath(
             "//p[contains(normalize-space(), 'Пользователь') and contains(normalize-space(), 'создан')]");
 
-        public CreateUserPage(IWebDriver driver) : base(driver) { }
+        public NewUserPage(IWebDriver driver) : base(driver) { }
 
         private bool WaitForAnyElementVisible(By locator1, By locator2)
         {

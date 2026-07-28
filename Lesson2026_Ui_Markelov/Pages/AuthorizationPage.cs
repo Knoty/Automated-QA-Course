@@ -33,6 +33,7 @@ namespace Lesson2026_Ui_Markelov.Pages
 
         public bool NavigateToCreateUserPage()
         {
+            _wait.Until(d => d.FindElement(CreateUserButton).Displayed);
             _driver.FindElement(CreateUserButton).Click();            
             try
             {
