@@ -7,6 +7,7 @@ namespace Lesson2026_Ui_Markelov.Pages
 {
     public class NewUserPage : BasePage
     {
+        private const string _path = "users";
         private readonly By _nameInput = By.XPath("//label[.=\"Имя\"]/following::input");
         private readonly By _emailInput = By.XPath("//label[.=\"Email\"]/following::input");
         private readonly By _passConfirmationInput = By.XPath("//label[.=\"Подтверждение пароля\"]/following::input");
@@ -16,11 +17,11 @@ namespace Lesson2026_Ui_Markelov.Pages
         private readonly By _createUserSuccessMessagePath = By.XPath(
             "//p[contains(normalize-space(), 'Пользователь') and contains(normalize-space(), 'создан')]");
 
-        public NewUserPage(IWebDriver driver) : base(driver) { }
+        public NewUserPage(BaseDriver driver) : base(driver, _path) { }
 
         private bool WaitForAnyElementVisible(By locator1, By locator2)
         {
-            return _wait.Until(driver =>
+            return BaseDriver.Wait.Until(driver =>
             {
                 var elements1 = driver.FindElements(locator1);
                 var elements2 = driver.FindElements(locator2);
@@ -30,13 +31,13 @@ namespace Lesson2026_Ui_Markelov.Pages
 
         public bool CreateUser(string name, string login, string email, string password)
         {
-            _driver.FindElement(_nameInput).SendKeys(name);
-            _driver.FindElement(LoginInput).SendKeys(login);
-            _driver.FindElement(_emailInput).SendKeys(email);
-            _driver.FindElement(PasswordInput).SendKeys(password);
-            _driver.FindElement(_passConfirmationInput).SendKeys(password);
+            BaseDriver.FindElement(_nameInput).SendKeys(name);
+            BaseDriver.FindElement(LoginInput).SendKeys(login);
+            BaseDriver.FindElement(_emailInput).SendKeys(email);
+            BaseDriver.FindElement(PasswordInput).SendKeys(password);
+            BaseDriver.FindElement(_passConfirmationInput).SendKeys(password);
 
-            _driver.FindElement(_saveButton).Click();
+            BaseDriver.FindElement(_saveButton).Click();
 
             return this.WaitForAnyElementVisible(_createUserErrorMessagePath, _createUserSuccessMessagePath);            
         }

@@ -3,21 +3,36 @@ using OpenQA.Selenium.Support.UI;
 
 namespace Lesson2026_Ui_Markelov.Base
 {
-    public abstract class BasePage
+    public class BasePage
     {
-        protected readonly IWebDriver _driver;
-        protected readonly WebDriverWait _wait;
+        private string _path;
+        public BaseDriver BaseDriver;
 
-        protected BasePage(IWebDriver driver)
+        public BasePage(BaseDriver baseDriver, string path = "")
         {
-            _driver = driver;
-            _wait = new WebDriverWait(driver, TimeSpan.FromSeconds(15));
+            _path = path;         
+            BaseDriver = baseDriver;
         }
 
-        protected By LoginInput => By.XPath("//label[.='Логин']/following::input");
-        protected By PasswordInput => By.XPath("//label[.='Пароль']/following::input");
-        protected By CreateUserButton => By.XPath("//button[contains(., \"Создать пользователя\")]");
+        protected By LoginInput => By.XPath("//label[.='Логин']/..//input");
+        protected By PasswordInput => By.XPath("//label[.='Пароль']/..//input");
+        protected By CreateUserButton => By.XPath("//button//span[.='Создать пользователя']");
 
-        protected By RegisterPageHeaderPath => By.XPath("//h1[text()='Создание пользователя']");
+        protected By RegisterPageHeaderPath => By.XPath("//h1[.='Создание пользователя']");
+
+        public void OpenPage()
+        {
+            BaseDriver.GoToUrl(_path);
+        }
+
+        public void PressButton(string button)
+        {
+            BaseDriver.Click(By.XPath($"//button//span[.='{button}']"));
+        }
+
+        public void FillField(string fieldName, string text)
+        {
+            BaseDriver.FillField(By.XPath($"//label[.='{fieldName}']/..//input"), text);
+        }
     }
 }

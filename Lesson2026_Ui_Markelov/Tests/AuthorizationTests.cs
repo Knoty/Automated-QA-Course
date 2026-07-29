@@ -8,31 +8,35 @@ using OpenQA.Selenium.Chrome;
 
 namespace Lesson2026_Ui_Markelov.Tests
 {
-    public class AuthorizationTests : Fixture
+    public class AuthorizationTests : BaseTest
     {
-        private AuthorizationPage _authorizationPage;
-        private NewUserPage _createUserPage;
+        private AuthorizationPage? _authorizationPage;
+        private NewUserPage? _createUserPage;
+
+        private AuthorizationPage AuthorizationPage =>
+            _authorizationPage ??= new AuthorizationPage(BaseDriver);
+        private NewUserPage CreateUserPage =>
+            _createUserPage ??= new NewUserPage(BaseDriver);
 
         [OneTimeSetUp]
         public override void SetUp()
         {
             base.SetUp();
-            _authorizationPage = new AuthorizationPage(Driver._driver);
-            _createUserPage = new NewUserPage(Driver._driver);
+            this.AuthorizationPage.OpenPage();
         }
 
         [TestCase("invalid", "invalid", TestName = "Попытка авторизации несуществующего аккаунта")]
         public void WrongAuthorization_ShowsErrorMessage(string login, string password)
         {
-            bool errorMsg = _authorizationPage.IsInvalidLoginErrorDisplayed(login, password);
-            Assert.IsTrue(errorMsg, "Некорректная авторизация не выдала сообщение об ошибке");
+            bool isErrorMsgDisplayed = this.AuthorizationPage.IsInvalidLoginErrorDisplayed(login, password);
+            Assert.IsTrue(isErrorMsgDisplayed, "Некорректная авторизация не выдала сообщение об ошибке");
         }
 
         [TestCase(TestName = "Переход на страницу создания аккаунта")]
         public void OpenCreateUserPage_Success()
         {
-            bool registerPageHeader = _authorizationPage.NavigateToCreateUserPage();
-            Assert.IsTrue(registerPageHeader, "Страница создания пользователя не отобразилась после клика");
+            bool isRegisterPageHeaderDisplayed = this.AuthorizationPage.NavigateToCreateUserPage();
+            Assert.IsTrue(isRegisterPageHeaderDisplayed, "Страница создания пользователя не отобразилась после клика");
         }
 
         [TestCase("Имя", "password", TestName = "Создание аккаунта")]
@@ -42,9 +46,9 @@ namespace Lesson2026_Ui_Markelov.Tests
             string login = "login_" + uniqueId;
             string email = $"{login}@test.test";
 
-            _authorizationPage.NavigateToCreateUserPage();
-            bool anyCreateUserMessage = _createUserPage!.CreateUser(name, login, email, password);
-            Assert.IsTrue(anyCreateUserMessage, "Сообщений о регистрации не появлялалось");
+            this.AuthorizationPage.NavigateToCreateUserPage();
+            bool isAnyCreateUserMessage = this.CreateUserPage.CreateUser(name, login, email, password);
+            Assert.IsTrue(isAnyCreateUserMessage, "Сообщений о регистрации не появлялось");
         }
     }
 }

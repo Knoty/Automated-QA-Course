@@ -8,38 +8,39 @@ namespace Lesson2026_Ui_Markelov.Base
 {
     public class BaseDriver
     {
-        public WebDriver _driver;
+        private WebDriver _webDriver;
+        public WebDriverWait Wait;
 
         public BaseDriver()
         {
-            _driver = this.StartBrowser();
+            this._webDriver = this.StartBrowser();
+            this.Wait = new WebDriverWait(this._webDriver, TimeSpan.FromSeconds(15));
         }
 
         public WebDriver StartBrowser()
         {
-            WebDriver _driver = new ChromeDriver();
-            _driver.Manage().Window.Maximize();
-            return _driver;
+            WebDriver driver = new ChromeDriver();
+            driver.Manage().Window.Maximize();
+            return driver;
         }
 
         public void Dispose()
         {
-            _driver?.Quit();
-            _driver?.Dispose();
+            this._webDriver?.Quit();
+            this._webDriver?.Dispose();
         }
 
-        public void GoToUrl()
+        public void GoToUrl(string url = "")
         {
-            _driver.Url = Config.BaseUrl;
-            _driver.Navigate();
+            this._webDriver.Url = Config.BaseUrl + url;
+            this._webDriver.Navigate();
         }
 
         public void WaitUntilElementExist(By xpath)
         {
             try
             {
-                WebDriverWait wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(15));
-                wait.Until(d => d.FindElement(xpath));
+                this.Wait.Until(d => d.FindElement(xpath));
             }
             catch
             {
@@ -51,8 +52,7 @@ namespace Lesson2026_Ui_Markelov.Base
         {
             try
             {
-                WebDriverWait wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(15));
-                wait.Until(d =>
+                this.Wait.Until(d =>
                 { 
                     var elem = d.FindElement(xpath);
                     return elem.Displayed ? elem : null;
@@ -68,8 +68,7 @@ namespace Lesson2026_Ui_Markelov.Base
         {
             try
             {
-                WebDriverWait wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(15));
-                wait.Until(d =>
+                this.Wait.Until(d =>
                 {
                     var elem = d.FindElement(xpath);
                     return (elem.Displayed && elem.Enabled) ? elem : null;
@@ -84,7 +83,7 @@ namespace Lesson2026_Ui_Markelov.Base
         public IWebElement FindElement(By xpath)
         {
             this.WaitUntilElementExist(xpath);
-            return _driver.FindElement(xpath);
+            return this._webDriver.FindElement(xpath);
         }
 
         public void Click(By xpath)
