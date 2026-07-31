@@ -17,7 +17,6 @@ namespace Lesson2026_Ui_Markelov.Base
         protected By LoginInput => By.XPath("//label[.='Логин']/..//input");
         protected By PasswordInput => By.XPath("//label[.='Пароль']/..//input");
         protected By CreateUserButton => By.XPath("//button//span[.='Создать пользователя']");
-
         protected By RegisterPageHeaderPath => By.XPath("//h1[.='Создание пользователя']");
 
         public void OpenPage()
@@ -33,6 +32,12 @@ namespace Lesson2026_Ui_Markelov.Base
         public void FillField(string fieldName, string text)
         {
             BaseDriver.FillField(By.XPath($"//label[.='{fieldName}']/..//input"), text);
+        }
+
+        public void ChooseComboboxValue(string combobox, string value)
+        {
+            BaseDriver.Click(By.XPath($"//label[.='{combobox}']/..//div"));
+            BaseDriver.Click(By.XPath($"//li/span[contains(text(), {value})]"));
         }
     }
 }

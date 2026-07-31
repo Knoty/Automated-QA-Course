@@ -80,6 +80,32 @@ namespace Lesson2026_Ui_Markelov.Base
             }
         }
 
+        public void WaitUntilElementFilled(By xpath, string value)
+        {
+            try
+            {
+                this.Wait.Until(d =>
+                {
+                    var elem = d.FindElement(xpath);
+                    return elem.GetAttribute("value") == value;
+                });
+            }
+            catch
+            {
+                throw new Exception($"value {xpath} не заполнилось");
+            }
+        }
+
+        public bool WaitForAnyElementDisplayed(By locator1, By locator2)
+        {
+            return this.Wait.Until(driver =>
+            {
+                var elements1 = driver.FindElements(locator1);
+                var elements2 = driver.FindElements(locator2);
+                return elements1.Any(e => e.Displayed) || elements2.Any(e => e.Displayed);
+            });
+        }
+
         public IWebElement FindElement(By xpath)
         {
             this.WaitUntilElementExist(xpath);
@@ -92,6 +118,16 @@ namespace Lesson2026_Ui_Markelov.Base
             this.WaitUntilElementVisible(xpath);
             this.WaitUntilElementClickable(xpath);
 
+            el.Click();
+        }
+
+        public void DoubleClick(By xpath)
+        {
+            var el = this.FindElement(xpath);
+            this.WaitUntilElementVisible(xpath);
+            this.WaitUntilElementClickable(xpath);
+
+            el.Click();
             el.Click();
         }
 

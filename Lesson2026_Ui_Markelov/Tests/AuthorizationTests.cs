@@ -12,6 +12,8 @@ namespace Lesson2026_Ui_Markelov.Tests
     {
         private AuthorizationPage? _authorizationPage;
         private NewUserPage? _createUserPage;
+        private readonly By _createUserSuccessMessagePath = By.XPath(
+            "//p[contains(normalize-space(), 'Пользователь') and contains(normalize-space(), 'создан')]");
 
         private AuthorizationPage AuthorizationPage =>
             _authorizationPage ??= new AuthorizationPage(BaseDriver);
@@ -21,7 +23,7 @@ namespace Lesson2026_Ui_Markelov.Tests
         [OneTimeSetUp]
         public override void SetUp()
         {
-            base.SetUp();
+            this.SetUp();
             this.AuthorizationPage.OpenPage();
         }
 
@@ -40,14 +42,15 @@ namespace Lesson2026_Ui_Markelov.Tests
         }
 
         [TestCase("Имя", "password", TestName = "Создание аккаунта")]
-        public void CreateNewUser_Success(string name, string password)
+        public void CreateNewUser(string name, string password)
         {
             string uniqueId = Guid.NewGuid().ToString("N").Substring(0, 8);
             string login = "login_" + uniqueId;
             string email = $"{login}@test.test";
 
             this.AuthorizationPage.NavigateToCreateUserPage();
-            bool isAnyCreateUserMessage = this.CreateUserPage.CreateUser(name, login, email, password);
+            this.CreateUserPage.CreateUser(name, login, email, password);
+            bool isAnyCreateUserMessage = this.BaseDriver.WaitForAnyElementDisplayed(this.AlreadyExistError, _createUserSuccessMessagePath);
             Assert.IsTrue(isAnyCreateUserMessage, "Сообщений о регистрации не появлялось");
         }
     }

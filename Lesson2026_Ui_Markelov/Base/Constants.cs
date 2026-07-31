@@ -8,5 +8,6 @@ namespace Lesson2026_Ui_Markelov.Base
         public static By PasswordInput => By.XPath("//label[.='Пароль']/following::input");
         public static string Username => "name";
         public static string Password => "testpass";
+        public static string IsAnyAddRecMsg => "Сообщений о добавлении записи не появлялось";
     }
 }
