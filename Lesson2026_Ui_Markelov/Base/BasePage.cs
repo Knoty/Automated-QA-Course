@@ -34,10 +34,10 @@ namespace Lesson2026_Ui_Markelov.Base
             BaseDriver.FillField(By.XPath($"//label[.='{fieldName}']/..//input"), text);
         }
 
-        public void ChooseComboboxValue(string combobox, string value)
+        public void ChooseComboboxValue(string combobox, string option)
         {
-            BaseDriver.Click(By.XPath($"//label[.='{combobox}']/..//div"));
-            BaseDriver.Click(By.XPath($"//li/span[contains(text(), {value})]"));
+            BaseDriver.Click(By.XPath($"//label[.='{combobox}']/..//*[@class='el-select']"));
+            BaseDriver.Click(By.XPath($"//div[@aria-hidden='false']//li/span[normalize-space()='{option}']"));
         }
     }
 }

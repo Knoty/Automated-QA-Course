@@ -1,5 +1,6 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 
 using SeleniumExtras.WaitHelpers;
@@ -42,7 +43,7 @@ namespace Lesson2026_Ui_Markelov.Base
             {
                 this.Wait.Until(d => d.FindElement(xpath));
             }
-            catch
+            catch (WebDriverTimeoutException)
             {
                 throw new Exception($"{xpath} не существует на странице");
             }
@@ -53,14 +54,30 @@ namespace Lesson2026_Ui_Markelov.Base
             try
             {
                 this.Wait.Until(d =>
-                { 
-                    var elem = d.FindElement(xpath);
-                    return elem.Displayed ? elem : null;
+                {
+                    var elem = d.FindElements(xpath);
+                    return elem.Count > 0 && elem[0].Displayed;
                 });
             }
-            catch
+            catch (WebDriverTimeoutException)
             {
-                throw new Exception($"{xpath} не виден на странице");
+                throw new Exception($"Элемент {xpath} не стал видимым за отведённое время");
+            }
+        }
+
+        public void WaitUntilLoading()
+        {
+            try
+            {
+                this.Wait.Until(d =>
+                {
+                    var elements = d.FindElements(By.ClassName("el-loading-mask"));
+                    return elements.Count == 0 || !elements[0].Displayed;
+                });
+            }
+            catch (WebDriverTimeoutException)
+            {
+                throw new Exception("Загрузка не завершилась за отведённое время");
             }
         }
 
@@ -74,7 +91,7 @@ namespace Lesson2026_Ui_Markelov.Base
                     return (elem.Displayed && elem.Enabled) ? elem : null;
                 });
             }
-            catch
+            catch (WebDriverTimeoutException)
             {
                 throw new Exception($"{xpath} не кликабелен на странице");
             }
@@ -90,7 +107,7 @@ namespace Lesson2026_Ui_Markelov.Base
                     return elem.GetAttribute("value") == value;
                 });
             }
-            catch
+            catch (WebDriverTimeoutException)
             {
                 throw new Exception($"value {xpath} не заполнилось");
             }
@@ -114,11 +131,20 @@ namespace Lesson2026_Ui_Markelov.Base
 
         public void Click(By xpath)
         {
-            var el = this.FindElement(xpath);
+            this.WaitUntilLoading();
             this.WaitUntilElementVisible(xpath);
             this.WaitUntilElementClickable(xpath);
+            var el = this.FindElement(xpath);
 
-            el.Click();
+            try
+            {
+                el.Click();
+            }
+            catch (ElementClickInterceptedException)
+            {
+                WaitUntilLoading();
+                this.FindElement(xpath).Click();
+            }
         }
 
         public void DoubleClick(By xpath)
@@ -126,9 +152,8 @@ namespace Lesson2026_Ui_Markelov.Base
             var el = this.FindElement(xpath);
             this.WaitUntilElementVisible(xpath);
             this.WaitUntilElementClickable(xpath);
-
-            el.Click();
-            el.Click();
+            Actions actions = new Actions(_webDriver);
+            actions.DoubleClick(el).Perform();
         }
 
         public void FillField(By xpath, string text)

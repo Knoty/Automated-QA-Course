@@ -32,7 +32,7 @@ namespace Lesson2026_Ui_Markelov.Base
             this.BaseDriver.FillField(Constants.LoginInput, Constants.Username);
             this.BaseDriver.FillField(Constants.PasswordInput, Constants.Password);
             this.BaseDriver.Click(_logInButton);
-            this.BaseDriver.WaitUntilElementExist(_welcomeHeader);
+            this.BaseDriver.WaitUntilElementVisible(_welcomeHeader);
         }
     }
 }

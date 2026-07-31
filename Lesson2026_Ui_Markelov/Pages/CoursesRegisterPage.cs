@@ -9,6 +9,11 @@ namespace Lesson2026_Ui_Markelov.Pages
         private CoursesPage _coursesnPage;
         private PositionPage _postionPage;
 
+
+        protected By SuccessfulyAddedMsg => By.XPath("//p[contains(., 'успешно сохранена')]");
+
+
+
         public CoursesRegisterPage(BaseDriver baseDriver) : base(baseDriver, "courses/register")
         {
             _postionPage = new PositionPage(baseDriver);
@@ -20,18 +25,15 @@ namespace Lesson2026_Ui_Markelov.Pages
             _coursesnPage.AddRecord(course);
             _postionPage.AddRecord(position);
             this.OpenPage();
-            Thread.Sleep(1000);
-            this.FillField("Вид курса", course);
-            Thread.Sleep(1000);
+            this.ChooseComboboxValue("Вид курса", course);
             this.ChooseComboboxValue("Должность", position);
-            Thread.Sleep(1000);
             this.FillField("Фамилия", surname);
-            Thread.Sleep(1000);
-            this.BaseDriver.DoubleClick(By.XPath("//div[.='Имя']/..//div[.=' Дважды кликните для ввода имени ']"));
-            Thread.Sleep(1000);
+            this.BaseDriver.DoubleClick(By.XPath("//div[.='Имя']/..//div[@class='first-name-trigger']"));
             this.FillField("Имя", name);
-            Thread.Sleep(1000);
             this.PressButton("Сохранить");
+            this.BaseDriver.WaitUntilLoading();
+            this.PressButton("Сохранить");
+            this.BaseDriver.WaitUntilElementExist(SuccessfulyAddedMsg);
         }
     }
 }
