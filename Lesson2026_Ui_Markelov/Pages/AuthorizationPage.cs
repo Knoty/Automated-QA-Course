@@ -6,25 +6,25 @@ namespace Lesson2026_Ui_Markelov.Pages
 {
     public class AuthorizationPage : BasePage
     {
-        private const string _path = "login";
-        private readonly By _logInButton = By.XPath("//button[contains(., \"Войти\")]");
-        private readonly By _errorMessagePath = By.XPath("//p[normalize-space()='Неверный логин или пароль']");
+        private const string Url = "login";
+        private readonly By _registerPageHeaderPath = By.XPath("//h1[.='Создание пользователя']");
 
-        public AuthorizationPage(BaseDriver driver) : base(driver, _path) { }
+        public AuthorizationPage(BaseDriver driver) : base(driver, Url) { }
 
         public void Login(string login, string pass)
         {
-            BaseDriver.FindElement(LoginInput).SendKeys(login);
-            BaseDriver.FindElement(PasswordInput).SendKeys(pass);
-            BaseDriver.FindElement(_logInButton).Click();
+            this.FillField("Логин", login);
+            this.FillField("Пароль", pass);
+            this.PressButton("Войти");
         }
 
-        public bool IsInvalidLoginErrorDisplayed(string login = "WrongLogin", string pass = "WrongPass")
+        public bool IsInvalidLoginErrorDisplayed(string login, string pass)
         {
+            this.OpenPage();
             this.Login(login, pass);
             try
             {
-                return BaseDriver.Wait.Until(d => d.FindElement(_errorMessagePath).Displayed);
+                return this.WaitForMsg("Неверный логин или пароль");
             }
             catch (WebDriverTimeoutException)
             {
@@ -34,11 +34,10 @@ namespace Lesson2026_Ui_Markelov.Pages
 
         public bool NavigateToCreateUserPage()
         {
-            BaseDriver.Wait.Until(d => d.FindElement(CreateUserButton).Displayed);
-            BaseDriver.FindElement(CreateUserButton).Click();            
+            this.PressButton("Создать пользователя");
             try
             {
-                return BaseDriver.Wait.Until(d => d.FindElement(RegisterPageHeaderPath).Displayed);
+                return this.BaseDriver.WaitUntilElementVisible(_registerPageHeaderPath);
             }
             catch (WebDriverTimeoutException)
             {

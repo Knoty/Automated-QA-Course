@@ -5,14 +5,14 @@ using OpenQA.Selenium.Chrome;
 
 namespace Lesson2026_Ui_Markelov.Base
 {
-    public class BaseTest
+    public class Fixture
     {
-        private const string _loginUrl = "login";
-        private readonly By _logInButton = By.XPath("//button[contains(., \"Войти\")]");
+        private const string LoginUrl = "login";
         private readonly By _welcomeHeader = By.XPath("//h1[.='Добро пожаловать']");
-        protected By AlreadyExistError => By.XPath("//p[contains(., 'уже существует')]");
-        protected By SuccessfulyAddedMsg => By.XPath("//p[contains(., 'успешно добавлен')]");
+        private BasePage? _page;
         public required BaseDriver BaseDriver;
+        private BasePage Page => _page ??= new BasePage(BaseDriver);
+
 
         [OneTimeSetUp]
         public virtual void SetUp()
@@ -28,10 +28,10 @@ namespace Lesson2026_Ui_Markelov.Base
 
         public void LogIn()
         {
-            this.BaseDriver.GoToUrl(_loginUrl);
-            this.BaseDriver.FillField(Constants.LoginInput, Constants.Username);
-            this.BaseDriver.FillField(Constants.PasswordInput, Constants.Password);
-            this.BaseDriver.Click(_logInButton);
+            this.BaseDriver.GoToUrl(LoginUrl);
+            this.Page.FillField("Логин", Constants.Username);
+            this.Page.FillField("Пароль", Constants.Password);
+            this.Page.PressButton("Войти");
             this.BaseDriver.WaitUntilElementVisible(_welcomeHeader);
         }
     }

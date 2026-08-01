@@ -8,17 +8,15 @@ using OpenQA.Selenium.Chrome;
 
 namespace Lesson2026_Ui_Markelov.Tests
 {
-    public class AuthorizationTests : BaseTest
+    public class AuthorizationTests : Fixture
     {
-        private AuthorizationPage? _authorizationPage;
-        private NewUserPage? _createUserPage;
         private readonly By _createUserSuccessMessagePath = By.XPath(
             "//p[contains(normalize-space(), 'Пользователь') and contains(normalize-space(), 'создан')]");
-
-        private AuthorizationPage AuthorizationPage =>
-            _authorizationPage ??= new AuthorizationPage(BaseDriver);
-        private NewUserPage CreateUserPage =>
-            _createUserPage ??= new NewUserPage(BaseDriver);
+        private readonly By _alreadyExistError = By.XPath("//p[contains(., 'уже существует')]");
+        private AuthorizationPage? _authorizationPage;
+        private NewUserPage? _createUserPage;
+        private AuthorizationPage AuthorizationPage => _authorizationPage ??= new AuthorizationPage(BaseDriver);
+        private NewUserPage CreateUserPage => _createUserPage ??= new NewUserPage(BaseDriver);
 
         [OneTimeSetUp]
         public override void SetUp()
@@ -27,9 +25,13 @@ namespace Lesson2026_Ui_Markelov.Tests
             this.AuthorizationPage.OpenPage();
         }
 
-        [TestCase("invalid", "invalid", TestName = "Попытка авторизации несуществующего аккаунта")]
+        [TestCase("wrongLogin", "wrongPass", TestName = "Попытка авторизации несуществующего аккаунта")]
         public void WrongAuthorization_ShowsErrorMessage(string login, string password)
         {
+            string uniqueId = Guid.NewGuid().ToString("N").Substring(0, 8);
+            login += uniqueId;
+            password += uniqueId;
+
             bool isErrorMsgDisplayed = this.AuthorizationPage.IsInvalidLoginErrorDisplayed(login, password);
             Assert.IsTrue(isErrorMsgDisplayed, "Некорректная авторизация не выдала сообщение об ошибке");
         }
@@ -50,7 +52,8 @@ namespace Lesson2026_Ui_Markelov.Tests
 
             this.AuthorizationPage.NavigateToCreateUserPage();
             this.CreateUserPage.CreateUser(name, login, email, password);
-            bool isAnyCreateUserMessage = this.BaseDriver.WaitForAnyElementDisplayed(this.AlreadyExistError, _createUserSuccessMessagePath);
+
+            bool isAnyCreateUserMessage = this.BaseDriver.WaitForAnyElementDisplayed(_alreadyExistError, _createUserSuccessMessagePath);
             Assert.IsTrue(isAnyCreateUserMessage, "Сообщений о регистрации не появлялось");
         }
     }

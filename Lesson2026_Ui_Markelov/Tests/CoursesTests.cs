@@ -8,7 +8,7 @@ using OpenQA.Selenium.Support.UI;
 
 namespace Lesson2026_Ui_Markelov.Tests
 {
-    public class CoursesTests : BaseTest
+    public class CoursesTests : Fixture
     {
         private CoursesPage? _page;
         private CoursesPage Page => _page ??= new CoursesPage(BaseDriver);
@@ -27,8 +27,8 @@ namespace Lesson2026_Ui_Markelov.Tests
 
             this.Page.AddRecord(name);
 
-            var successfulyAddedMsg = BaseDriver.FindElement(this.SuccessfulyAddedMsg).Displayed;
-            Assert.IsTrue(successfulyAddedMsg, Constants.IsAnyAddRecMsg);
+            var successfulyAddedMsg = BaseDriver.FindElement(this.Page.SuccessfulyAddedMsg).Displayed;
+            Assert.IsTrue(successfulyAddedMsg, Constants.NoAddRecMsg);
 
         }
     }

@@ -7,12 +7,13 @@ namespace Lesson2026_Ui_Markelov.Pages
 {
     public class CoursesRegisterPage : BasePage
     {
+        private const string Url = "courses/register";
         private readonly By _testCheckMsg = By.XPath("//p[.='Алё че с тестами?']");
         private readonly By _nameFieldTrigger = By.XPath("//div[.='Имя']/..//div[@class='first-name-trigger']");
         private CoursesPage _coursesnPage;
         private PositionPage _postionPage;
 
-        public CoursesRegisterPage(BaseDriver baseDriver) : base(baseDriver, "courses/register")
+        public CoursesRegisterPage(BaseDriver baseDriver) : base(baseDriver, Url)
         {
             _postionPage = new PositionPage(baseDriver);
             _coursesnPage = new CoursesPage(baseDriver);

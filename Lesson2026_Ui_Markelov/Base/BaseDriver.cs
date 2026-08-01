@@ -51,11 +51,11 @@ namespace Lesson2026_Ui_Markelov.Base
             }
         }
 
-        public void WaitUntilElementVisible(By xpath)
+        public bool WaitUntilElementVisible(By xpath)
         {
             try
             {
-                this.Wait.Until(d =>
+                return this.Wait.Until(d =>
                 {
                     var elements = d.FindElements(xpath);
                     return elements.Count > 0 && elements[0].Displayed;

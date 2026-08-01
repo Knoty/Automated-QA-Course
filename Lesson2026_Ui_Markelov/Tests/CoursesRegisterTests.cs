@@ -7,7 +7,7 @@ using OpenQA.Selenium;
 
 namespace Lesson2026_Ui_Markelov.Tests
 {
-    public class CoursesRegisterTests : BaseTest
+    public class CoursesRegisterTests : Fixture
     {
         private CoursesRegisterPage? _page;
         private CoursesRegisterPage Page => _page ??= new CoursesRegisterPage(BaseDriver);
@@ -33,7 +33,7 @@ namespace Lesson2026_Ui_Markelov.Tests
                 surname,
                 name,
                 saveAttempts);
-            Assert.IsTrue(successfulySaveMsg, Constants.IsAnyAddRecMsg);
+            Assert.IsTrue(successfulySaveMsg, Constants.NoAddRecMsg);
         }
     }
 }

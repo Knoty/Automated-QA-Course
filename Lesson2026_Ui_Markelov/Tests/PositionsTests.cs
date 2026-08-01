@@ -5,7 +5,7 @@ using NUnit.Framework;
 
 namespace Lesson2026_Ui_Markelov.Tests
 {
-    public class PositionsTests : BaseTest
+    public class PositionsTests : Fixture
     {
         private PositionPage? _page;
         private PositionPage Page => _page ??= new PositionPage(BaseDriver);
@@ -24,8 +24,8 @@ namespace Lesson2026_Ui_Markelov.Tests
 
             this.Page.AddRecord(name);
 
-            var successfulyAddedMsg = BaseDriver.FindElement(this.SuccessfulyAddedMsg).Displayed;
-            Assert.IsTrue(successfulyAddedMsg, Constants.IsAnyAddRecMsg);
+            var successfulyAddedMsg = BaseDriver.FindElement(this.Page.SuccessfulyAddedMsg).Displayed;
+            Assert.IsTrue(successfulyAddedMsg, Constants.NoAddRecMsg);
         }
     }
 }

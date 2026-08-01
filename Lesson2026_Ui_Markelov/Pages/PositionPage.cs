@@ -6,7 +6,9 @@ namespace Lesson2026_Ui_Markelov.Pages
 {
     public class PositionPage : BasePage
     {
-        public PositionPage(BaseDriver baseDriver) : base(baseDriver, "directories/positions") { }
+        private const string Url = "directories/positions";
+
+        public PositionPage(BaseDriver baseDriver) : base(baseDriver, Url) { }
 
         public void AddRecord(string name)
         {

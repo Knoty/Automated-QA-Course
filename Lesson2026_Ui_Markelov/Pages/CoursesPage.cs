@@ -10,7 +10,9 @@ namespace Lesson2026_Ui_Markelov.Pages
 {
     public class CoursesPage : BasePage
     {
-        public CoursesPage(BaseDriver baseDriver) : base(baseDriver, "directories/courses") { }
+        private const string Url = "directories/courses";
+
+        public CoursesPage(BaseDriver baseDriver) : base(baseDriver, Url) { }
 
         public void AddRecord(string name)
         {
