@@ -23,7 +23,7 @@ namespace Lesson2026_Ui_Markelov.Tests
         [OneTimeSetUp]
         public override void SetUp()
         {
-            this.SetUp();
+            base.SetUp();
             this.AuthorizationPage.OpenPage();
         }
 

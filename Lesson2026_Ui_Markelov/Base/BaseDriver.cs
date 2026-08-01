@@ -1,4 +1,6 @@
-﻿using OpenQA.Selenium;
+﻿using System.Collections.ObjectModel;
+
+using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
@@ -55,8 +57,8 @@ namespace Lesson2026_Ui_Markelov.Base
             {
                 this.Wait.Until(d =>
                 {
-                    var elem = d.FindElements(xpath);
-                    return elem.Count > 0 && elem[0].Displayed;
+                    var elements = d.FindElements(xpath);
+                    return elements.Count > 0 && elements[0].Displayed;
                 });
             }
             catch (WebDriverTimeoutException)
@@ -65,30 +67,14 @@ namespace Lesson2026_Ui_Markelov.Base
             }
         }
 
-        public void WaitUntilLoading()
+        public bool WaitUntilElementClickable(By xpath)
         {
             try
             {
-                this.Wait.Until(d =>
+                return this.Wait.Until(d =>
                 {
-                    var elements = d.FindElements(By.ClassName("el-loading-mask"));
-                    return elements.Count == 0 || !elements[0].Displayed;
-                });
-            }
-            catch (WebDriverTimeoutException)
-            {
-                throw new Exception("Загрузка не завершилась за отведённое время");
-            }
-        }
-
-        public void WaitUntilElementClickable(By xpath)
-        {
-            try
-            {
-                this.Wait.Until(d =>
-                {
-                    var elem = d.FindElement(xpath);
-                    return (elem.Displayed && elem.Enabled) ? elem : null;
+                    var elements = d.FindElements(xpath);
+                    return elements.Count > 0 && elements[0].Displayed && elements[0].Enabled;
                 });
             }
             catch (WebDriverTimeoutException)
@@ -113,13 +99,38 @@ namespace Lesson2026_Ui_Markelov.Base
             }
         }
 
-        public bool WaitForAnyElementDisplayed(By locator1, By locator2)
+        public void WaitUntilLoading()
+        {
+            try
+            {
+                this.Wait.Until(d =>
+                {
+                    var elements = d.FindElements(By.ClassName("el-loading-mask"));
+                    return elements.Count == 0 || !elements[0].Displayed;
+                });
+            }
+            catch (WebDriverTimeoutException)
+            {
+                throw new Exception("Загрузка не завершилась за отведённое время");
+            }
+        }
+
+        public bool WaitForAnyElementDisplayed(By xpath1, By xpath2)
         {
             return this.Wait.Until(driver =>
             {
-                var elements1 = driver.FindElements(locator1);
-                var elements2 = driver.FindElements(locator2);
+                var elements1 = driver.FindElements(xpath1);
+                var elements2 = driver.FindElements(xpath2);
                 return elements1.Any(e => e.Displayed) || elements2.Any(e => e.Displayed);
+            });
+        }
+
+        public void WaitUntilElementDisappears(By xpath)
+        {
+            Wait.Until(d =>
+            {
+                var elements = d.FindElements(xpath);
+                return elements.Count == 0 || !elements[0].Displayed;
             });
         }
 
@@ -131,7 +142,6 @@ namespace Lesson2026_Ui_Markelov.Base
 
         public void Click(By xpath)
         {
-            this.WaitUntilLoading();
             this.WaitUntilElementVisible(xpath);
             this.WaitUntilElementClickable(xpath);
             var el = this.FindElement(xpath);

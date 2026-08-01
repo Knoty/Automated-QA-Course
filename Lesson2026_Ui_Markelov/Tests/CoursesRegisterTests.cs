@@ -3,6 +3,8 @@ using Lesson2026_Ui_Markelov.Pages;
 
 using NUnit.Framework;
 
+using OpenQA.Selenium;
+
 namespace Lesson2026_Ui_Markelov.Tests
 {
     public class CoursesRegisterTests : BaseTest
@@ -16,8 +18,8 @@ namespace Lesson2026_Ui_Markelov.Tests
             this.LogIn();
         }
 
-        [TestCase(TestName = "Регистрация новой должности на новый курс")]
-        public void RegisterToNewCourseAndPostition()
+        [TestCase(5, TestName = "Регистрация новой должности на новый курс")]
+        public void RegisterToNewCourseAndPostition(int saveAttempts)
         {
             string uniqueId = Guid.NewGuid().ToString("N").Substring(0, 8);
             string course = "course_" + uniqueId;
@@ -25,7 +27,13 @@ namespace Lesson2026_Ui_Markelov.Tests
             string surname = "surname_" + uniqueId;
             string name = "name_" + uniqueId;
 
-            this.Page.RegisterToCourseAndPostition(course, position, surname, name);
+            var successfulySaveMsg = this.Page.RegisterToCourseAndPostition(
+                course,
+                position,
+                surname,
+                name,
+                saveAttempts);
+            Assert.IsTrue(successfulySaveMsg, Constants.IsAnyAddRecMsg);
         }
     }
 }
